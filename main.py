@@ -36,17 +36,17 @@ def focal_length_prediction(image: cv2.typing.MatLike) -> float:
 
 def find_depth(p1: Pixel, total: Total) -> float:
     return (total.find_F(total.center_pixel, p1) / total.known_F) \
-        * total.known_real_distance
+           * total.known_real_distance
 
 
 def find_ground_distance(p1: Pixel, p2: Pixel, total: Total) -> float:
     return (total.find_F(p1, p2) / total.known_F) \
-        * total.known_real_distance
+           * total.known_real_distance
 
 
 def focal_length(p1: Pixel, p2: Pixel, total: Total) -> float:
     return (total.find_F(p1, p2) / total.known_F) \
-        * total.known_real_distance
+           * total.known_real_distance
 
 
 def main():
@@ -73,7 +73,8 @@ def main():
     cv2.destroyAllWindows()
 
     total = Total(acceleration_dimensions,
-                  focal_length, known_real_distance,
+                  focal_length,
+                  known_real_distance,
                   center_coordinates,
                   known_pixels)
 
@@ -87,11 +88,11 @@ def main():
     # 46.35700767563264
     # 39.381173794287264
 
-# 60
-# -0.02
-# 0.66
-# -0.32
-# 2300
+    # 60
+    # -0.02
+    # 0.66
+    # -0.32
+    # 2300
 
     print(find_ground_distance(user_pixels[0], user_pixels[1], total))
 
