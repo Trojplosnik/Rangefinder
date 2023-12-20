@@ -10,8 +10,9 @@ def find_center(image: cv2.typing.MatLike) -> Pixel:
 
     center_x = width // 2
     center_y = height // 2
-
-    return Pixel(center_x, center_y)
+    center = Pixel(center_x, center_y)
+    center.print()
+    return center
 
 
 def set_known_pixels(event, x, y, flags, param):
@@ -56,6 +57,7 @@ def main():
     acceleration_dimensions = \
         AccelerationDimensions(float(input()), float(input()), float(input()))
     center_coordinates = find_center(image)
+
     focal_length = float(input())
 
     cv2.namedWindow('image')
