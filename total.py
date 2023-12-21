@@ -25,8 +25,9 @@ class Total:
         d = self.d()
         e = self.e(p1, p2)
         f = self.f(p1, p2)
-        return math.sqrt(a * (self.focal_length ** 2) + b * self.focal_length + c) \
-               / abs(d * (self.focal_length ** 2) + e * self.focal_length + f)
+        return math.sqrt(a * (self.focal_length ** 2)
+                         + b * self.focal_length + c) / \
+            abs(d * (self.focal_length ** 2) + e * self.focal_length + f)
 
     def convert_coordinates(self, p: Pixel):
         return Pixel(p.y - self.center_pixel.y, self.center_pixel.x - p.x)
@@ -48,18 +49,13 @@ class Total:
     #     d2 = self.d()
     #     e2 = self.e(q1, q2)
     #     f2 = self.f(q1, q2)
-    #     coefficients = [k * a2 * d1 ** 2 - a1 * d2 ** 2,
-    #                      2 * k * a2 * d1 * e1 - 2 * a1 * d2 * e2,
-    #                     (2 * k * a2 * d1 * f1 + k * a2 * e1 ** 2)
-    #                     - (2 * a1 * d2 * f2 + a1 * e2 ** 2),
-    #                     2 * k * a2 * e1 * f1 - 2 * a1 * e2 * f2,
-    #                     k * a2 * f1 ** 2 - a1 * f2 ** 2]
+    #     coefficients = []
     #     roots = numpy.roots(coefficients).tolist()
     #     nearest = min(roots, key=lambda x: abs(x - focal_length_prediction))
     #     return nearest
 
     def a(self, p1: Pixel, p2: Pixel) -> float:
-        return (self.g.x ** 2 + self.g.y ** 2) * (p1.x - p2.x) ** 2 + \
+        return (self.g.x ** 2 + self.g.z ** 2) * (p1.x - p2.x) ** 2 + \
                (self.g.y ** 2 + self.g.z ** 2) * (p1.y - p2.y) ** 2 + \
                2 * self.g.x * self.g.y * (p2.x - p1.x) * (p2.y - p1.y)
 
@@ -68,7 +64,8 @@ class Total:
                * (self.g.y * (p1.x - p2.x) + self.g.x * (p2.y - p1.y))
 
     def c(self, p1: Pixel, p2: Pixel) -> float:
-        return (self.g.x ** 2 + self.g.y ** 2) * (p2.x * p1.y - p1.x * p2.y) ** 2
+        return (self.g.x ** 2 + self.g.y ** 2) *\
+            ((p2.x * p1.y - p1.x * p2.y) ** 2)
 
     def d(self) -> float:
         return self.g.z ** 2
@@ -78,5 +75,5 @@ class Total:
                  + self.g.x * self.g.z * p1.x + self.g.y * self.g.z * p1.y)
 
     def f(self, p1: Pixel, p2: Pixel) -> float:
-        return self.g.x ** 2 * p1.x * p1.y + self.g.x * self.g.y * p2.x * p1.y + \
-               self.g.x * self.g.y * p1.x * p2.y + self.g.y ** 2 * p1.y * p2.y
+        return self.g.x ** 2 * p1.x * p1.y + self.g.x * self.g.y * p2.x * p1.y\
+            + self.g.x * self.g.y * p1.x * p2.y + self.g.y ** 2 * p1.y * p2.y

@@ -11,7 +11,7 @@ def find_center(image: cv2.typing.MatLike) -> Pixel:
     center_x = width // 2
     center_y = height // 2
     center = Pixel(center_x, center_y)
-    center.print()
+    # center.print()
     return center
 
 
@@ -79,8 +79,8 @@ def main():
                   known_real_distance,
                   center_coordinates,
                   known_pixels)
-
-    map(total.convert_coordinates, user_pixels)
+    #
+    # map(total.convert_coordinates, user_pixels)
     # 57.73919531315446
     # 30.201450678085976
     # 51.80754528860309
@@ -95,6 +95,9 @@ def main():
     # 0.66
     # -0.32
     # 2300
+
+    # print(total.find_F(user_pixels[2], user_pixels[3])
+    #       / total.find_F(user_pixels[0], user_pixels[1]))
 
     print(find_ground_distance(user_pixels[0], user_pixels[1], total))
 
