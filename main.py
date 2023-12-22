@@ -1,5 +1,6 @@
 import cv2
 from total import Total, Pixel, AccelerationDimensions, math
+from camera import make_picture
 
 known_pixels = list()
 user_pixels = list()
@@ -52,6 +53,7 @@ def focal_length(p1: Pixel, p2: Pixel, total: Total) -> float:
 
 def main():
     image_path = "images/2.jpg"
+    img = make_picture("images")
     image = cv2.imread(image_path)
     known_real_distance = float(input())
     acceleration_dimensions = \
