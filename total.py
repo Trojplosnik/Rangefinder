@@ -1,8 +1,6 @@
 import math
-from structures import Pixel, AccelerationDimensions
-
-import numpy
-
+from Models.Pixel import Pixel
+from Models.AccelerationDimensions import AccelerationDimensions
 
 class Total:
     def __init__(self, acceleration_dimensions: AccelerationDimensions,
@@ -27,7 +25,7 @@ class Total:
         f = self.f(p1, p2)
         return math.sqrt(a * (self.focal_length ** 2)
                          + b * self.focal_length + c) / \
-            abs(d * (self.focal_length ** 2) + e * self.focal_length + f)
+               abs(d * (self.focal_length ** 2) + e * self.focal_length + f)
 
     def convert_coordinates(self, p: Pixel):
         return Pixel(p.y - self.center_pixel.y, self.center_pixel.x - p.x)
@@ -64,8 +62,8 @@ class Total:
                * (self.g.y * (p1.x - p2.x) + self.g.x * (p2.y - p1.y))
 
     def c(self, p1: Pixel, p2: Pixel) -> float:
-        return (self.g.x ** 2 + self.g.y ** 2) *\
-            ((p2.x * p1.y - p1.x * p2.y) ** 2)
+        return (self.g.x ** 2 + self.g.y ** 2) * \
+               ((p2.x * p1.y - p1.x * p2.y) ** 2)
 
     def d(self) -> float:
         return self.g.z ** 2
@@ -75,5 +73,5 @@ class Total:
                  + self.g.x * self.g.z * p1.x + self.g.y * self.g.z * p1.y)
 
     def f(self, p1: Pixel, p2: Pixel) -> float:
-        return self.g.x ** 2 * p1.x * p1.y + self.g.x * self.g.y * p2.x * p1.y\
-            + self.g.x * self.g.y * p1.x * p2.y + self.g.y ** 2 * p1.y * p2.y
+        return self.g.x ** 2 * p1.x * p1.y + self.g.x * self.g.y * p2.x * p1.y \
+               + self.g.x * self.g.y * p1.x * p2.y + self.g.y ** 2 * p1.y * p2.y
