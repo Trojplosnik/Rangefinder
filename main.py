@@ -11,7 +11,7 @@ def find_center(image: cv2.typing.MatLike) -> Pixel:
 
     center_x = width // 2
     center_y = height // 2
-    center = Pixel(center_x, center_y)
+    center = Pixel(0, 0)
     # center.print()
     return center
 
@@ -32,8 +32,8 @@ def get_user_pixels(event, x, y, flags, param):
         cv2.destroyAllWindows()
 
 
-def focal_length_prediction(image: cv2.typing.MatLike) -> float:
-    return image.shape[0] / (2 * math.tan(0.5 * math.radians(60)))
+def focal_length_prediction(h: int) -> float:
+    return h / (2 * math.tan(0.5 * math.radians(60)))
 
 
 def find_depth(p1: Pixel, total: Total) -> float:
@@ -47,7 +47,7 @@ def find_ground_distance(p1: Pixel, p2: Pixel, total: Total) -> float:
 
 
 def main():
-    image_path = "images/2.jpg"
+    image_path = "images/3.png"
     # img = make_picture("images")
     image = cv2.imread(image_path)
     # known_real_distance = float(input("Input real distance:"))
@@ -74,7 +74,7 @@ def main():
 
     total = Total(acceleration_dimensions=acceleration_dimensions,
                   # focal_length=focal_length,
-                  focal_length_prediction=focal_length_prediction(image),
+                  focal_length_prediction=focal_length_prediction(image.shape[0]),
                   known_real_distance=known_real_distance,
                   center_pixel=center_coordinates,
                   known_pixels=known_pixels)
@@ -95,13 +95,17 @@ def main():
     # -0.32
     # 2300
 
-    print(total.find_F(user_pixels[2], user_pixels[3])
-          / total.find_F(user_pixels[0], user_pixels[1]))
+    print(total.find_F(user_pixels[0], user_pixels[1])
+          / total.find_F(user_pixels[2], user_pixels[3]))
+    # print(total.find_F(user_pixels[4], user_pixels[5])
+    #       / total.find_F(user_pixels[6], user_pixels[7]))
 
     print(total.focal_length)
 
     print(find_ground_distance(user_pixels[0], user_pixels[1], total))
-
+    # print(find_ground_distance(user_pixels[2], user_pixels[3], total))
+    # print(find_ground_distance(user_pixels[4], user_pixels[5], total))
+    #
     for pixel in user_pixels:
         print(find_depth(pixel, total))
 
