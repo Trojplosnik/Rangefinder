@@ -6,14 +6,16 @@ known_pixels = list()
 user_pixels = list()
 
 
-def find_center(image: cv2.typing.MatLike) -> Pixel:
-    height, width = image.shape[:2]
-
+def find_center(height, width) -> Pixel:
     center_x = width // 2
     center_y = height // 2
-    center = Pixel(0, 0)
+    center = Pixel(center_x, center_y)
     # center.print()
     return center
+
+
+def convert_coordinates(center_pixel, p: Pixel):
+    return Pixel(-p.y + center_pixel.y, p.x - center_pixel.x)
 
 
 def set_known_pixels(event, x, y, flags, param):
@@ -54,7 +56,7 @@ def main():
     known_real_distance = tuple(map(float, input("Input real distance:").split()))
     acceleration_dimensions = \
         AccelerationDimensions(float(input()), float(input()), float(input()))
-    center_coordinates = find_center(image)
+    center_coordinates = find_center(*image.shape[:2])
 
     # focal_length = float(input())
 
@@ -79,35 +81,31 @@ def main():
                   center_pixel=center_coordinates,
                   known_pixels=known_pixels)
     #
-    # map(total.convert_coordinates, user_pixels)
-    # 57.73919531315446
-    # 30.201450678085976
-    # 51.80754528860309
-
-    # 59.01528445072243
-    # 29.14370495143736
-    # 46.35700767563264
-    # 39.381173794287264
+    converted_user_pixels = list(map(total.convert_coordinates, user_pixels))
 
     # 60
     # -0.02
     # 0.66
     # -0.32
     # 2300
-
-    print(total.find_F(user_pixels[0], user_pixels[1])
-          / total.find_F(user_pixels[2], user_pixels[3]))
-    # print(total.find_F(user_pixels[4], user_pixels[5])
-    #       / total.find_F(user_pixels[6], user_pixels[7]))
-
     print(total.focal_length)
-
-    print(find_ground_distance(user_pixels[0], user_pixels[1], total))
-    # print(find_ground_distance(user_pixels[2], user_pixels[3], total))
-    # print(find_ground_distance(user_pixels[4], user_pixels[5], total))
+    print(focal_length_prediction(image.shape[0]))
+    print(total.find_F(converted_user_pixels[0], converted_user_pixels[1])
+          / total.find_F(converted_user_pixels[2], converted_user_pixels[3]))
+    print(total.find_F(converted_user_pixels[2], converted_user_pixels[3])
+          / total.find_F(converted_user_pixels[4], converted_user_pixels[5]))
+    #[1903.259259   -921.77290694 -802.22489562 -123.24701917]
+    # 1903.259259002505
+    # 1548.4534219665763
+    # 3.008355325683422
     #
-    for pixel in user_pixels:
-        print(find_depth(pixel, total))
+    # print(find_ground_distance(converted_user_pixels[0], converted_user_pixels[1], total))
+    #
+    # print(find_ground_distance(converted_user_pixels[2], converted_user_pixels[3], total))
+    # print(find_ground_distance(converted_user_pixels[4], converted_user_pixels[5], total))
+    #
+    # for pixel in user_pixels:
+    #     print(find_depth(pixel, total))
 
 
 if __name__ == "__main__":

@@ -15,7 +15,7 @@ class Total:
         self.center_pixel = center_pixel
         self.g = acceleration_dimensions
         # self.focal_length = focal_length
-        self.known_pixels = known_pixels
+        self.known_pixels = list(map(self.convert_coordinates, known_pixels))
         # list(map(self.convert_coordinates, known_pixels))
         self.focal_length = self.find_focal_length(focal_length_prediction,
                                                    *known_real_distance,
@@ -39,12 +39,16 @@ class Total:
         d = self.d()
         e = self.e(p1, p2)
         f = self.f(p1, p2)
-        return math.sqrt(a * (self.focal_length ** 2)
-                         + b * self.focal_length + c) / \
-            math.sqrt(d * (self.focal_length ** 2) + e * self.focal_length + f)
+        chicl = math.sqrt(a * (self.focal_length ** 2) + b * self.focal_length + c)
+        # if d * (self.focal_length ** 2) + e * self.focal_length + f <= 0:
+        #     print('*************')
+        #     print(d * (self.focal_length ** 2) + e * self.focal_length + f)
+        #     print('*************')
+        znam = math.sqrt(d * (self.focal_length ** 2) + e * self.focal_length + f)
+        return chicl / znam
 
     def convert_coordinates(self, p: Pixel):
-        return Pixel(self.center_pixel.y - p.y, p.x - self.center_pixel.x)
+        return Pixel(p.y - self.center_pixel.y, -p.x + self.center_pixel.x)
 
     # def find_focal_length(self, focal_length_prediction: float,
     #                       first_known_real_distance: float,
@@ -73,9 +77,10 @@ class Total:
     #     coef_x1 = b1 * f2 ** 2 + 2 * c1 * e2 * f2 - k * (b2 * f1 ** 2 + 2 * c2 * e1 * f1)
     #     coef_x0 = c1 * f2 ** 2 - k * c2 * f1 ** 2
     #     coefficients = [coef_x6, coef_x5, coef_x4, coef_x3, coef_x2, coef_x1, coef_x0]
-    #     roots = list(map(abs, numpy.roots(coefficients)))
-    #     nearest = min(roots, key=lambda x: abs(abs(x) - focal_length_prediction))
-    #     return nearest
+    #     roots = numpy.roots(coefficients)
+    #     # list(map(abs, numpy.roots(coefficients)))
+    #     nearest = min(roots, key=lambda x: abs(x - focal_length_prediction))
+    #     return abs(nearest)
 
     def find_focal_length(self, focal_length_prediction: float,
                           first_known_real_distance: float,
@@ -100,7 +105,9 @@ class Total:
         coef_x0 = c1 * f2 - k * c2 * f1
         coefficients = [coef_x4, coef_x3, coef_x2, coef_x1, coef_x0]
         roots = list(map(abs, numpy.roots(coefficients)))
-        nearest = min(roots, key=lambda x: abs(abs(x) - focal_length_prediction))
+        # list(map(abs, numpy.roots(coefficients)))
+        print(roots)
+        nearest = min(roots, key=lambda x: abs(x - focal_length_prediction))
         return nearest
 
     def a(self, p1: Pixel, p2: Pixel) -> float:
