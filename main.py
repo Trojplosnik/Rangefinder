@@ -20,7 +20,7 @@ def set_known_pixels(event, x, y, flags, param):
     global known_pixels
     if event == cv2.EVENT_LBUTTONDOWN:
         known_pixels.append(Pixel(x, y))
-    if len(known_pixels) == 2:
+    if len(known_pixels) == 4:
         cv2.destroyAllWindows()
 
 
@@ -38,29 +38,25 @@ def focal_length_prediction(image: cv2.typing.MatLike) -> float:
 
 def find_depth(p1: Pixel, total: Total) -> float:
     return (total.find_F(total.center_pixel, p1) / total.known_F) \
-           * total.known_real_distance
+           * total.known_real_distance[0]
 
 
 def find_ground_distance(p1: Pixel, p2: Pixel, total: Total) -> float:
     return (total.find_F(p1, p2) / total.known_F) \
-           * total.known_real_distance
-
-
-def focal_length(p1: Pixel, p2: Pixel, total: Total) -> float:
-    return (total.find_F(p1, p2) / total.known_F) \
-           * total.known_real_distance
+           * total.known_real_distance[0]
 
 
 def main():
     image_path = "images/2.jpg"
-    img = make_picture("images")
+    # img = make_picture("images")
     image = cv2.imread(image_path)
-    known_real_distance = float(input())
+    # known_real_distance = float(input("Input real distance:"))
+    known_real_distance = tuple(map(float, input("Input real distance:").split()))
     acceleration_dimensions = \
         AccelerationDimensions(float(input()), float(input()), float(input()))
     center_coordinates = find_center(image)
 
-    focal_length = float(input())
+    # focal_length = float(input())
 
     cv2.namedWindow('image')
     cv2.setMouseCallback('image', set_known_pixels)
@@ -76,11 +72,12 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-    total = Total(acceleration_dimensions,
-                  focal_length,
-                  known_real_distance,
-                  center_coordinates,
-                  known_pixels)
+    total = Total(acceleration_dimensions=acceleration_dimensions,
+                  # focal_length=focal_length,
+                  focal_length_prediction=focal_length_prediction(image),
+                  known_real_distance=known_real_distance,
+                  center_pixel=center_coordinates,
+                  known_pixels=known_pixels)
     #
     # map(total.convert_coordinates, user_pixels)
     # 57.73919531315446
@@ -98,8 +95,10 @@ def main():
     # -0.32
     # 2300
 
-    # print(total.find_F(user_pixels[2], user_pixels[3])
-    #       / total.find_F(user_pixels[0], user_pixels[1]))
+    print(total.find_F(user_pixels[2], user_pixels[3])
+          / total.find_F(user_pixels[0], user_pixels[1]))
+
+    print(total.focal_length)
 
     print(find_ground_distance(user_pixels[0], user_pixels[1], total))
 
