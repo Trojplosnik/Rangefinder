@@ -39,13 +39,8 @@ class Total:
         d = self.d()
         e = self.e(p1, p2)
         f = self.f(p1, p2)
-        chicl = math.sqrt(a * (self.focal_length ** 2) + b * self.focal_length + c)
-        # if d * (self.focal_length ** 2) + e * self.focal_length + f <= 0:
-        #     print('*************')
-        #     print(d * (self.focal_length ** 2) + e * self.focal_length + f)
-        #     print('*************')
-        znam = math.sqrt(d * (self.focal_length ** 2) + e * self.focal_length + f)
-        return chicl / znam
+        return math.sqrt(abs(a * (self.focal_length ** 2) + b * self.focal_length + c)) /\
+            math.sqrt(abs(d * (self.focal_length ** 2) + e * self.focal_length + f))
 
     def convert_coordinates(self, p: Pixel):
         return Pixel(p.y - self.center_pixel.y, -p.x + self.center_pixel.x)

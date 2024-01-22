@@ -1,7 +1,9 @@
 import cv2
+import Noises.PhoneDataLoader
 
 
 def make_picture(path: str) -> cv2.typing.MatLike:
+
     cap = cv2.VideoCapture(0)
     while True:
         ret, img = cap.read()
